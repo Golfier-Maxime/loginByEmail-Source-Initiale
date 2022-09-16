@@ -1,64 +1,113 @@
 <script setup>
-import SignIn from './components/SignIn.vue'
-import { createClient } from '@supabase/supabase-js'
-import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient'
+import SignIn from "./components/SignIn.vue";
+import { createClient } from "@supabase/supabase-js";
+import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 </script>
 
-<template>    
+<template>
   <header>
     <router-link to="/">Go to Home</router-link>
-    <img alt="Logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img
+      alt="Logo"
+      class="logo"
+      src="./assets/logo.svg"
+      width="125"
+      height="125"
+    />
     <div class="wrapper" id="signOut">
       <div><SignIn msg="User, please sign in !" /></div>
-      <label>email: </label><br>
-	    <input type="email" required v-model="email" placeholder="username@domain.tld"><br>
-	    <label>password: </label><br>
-	    <input type="password" required v-model="passwd" ><br>
+      <label>email: </label><br />
+      <input
+        type="email"
+        required
+        v-model="email"
+        placeholder="username@domain.tld"
+      /><br />
+      <label>password: </label><br />
+      <input type="password" required v-model="passwd" /><br />
       <button v-on:click="register()">Sign Up</button>
       <button v-on:click="login()">Sign In</button>
-      <p>
-      <label id="status"> You are not yet connected </label><br>  
-      </p>
+      <button v-on:click="reset()">Reset</button>
+      <button v-on:click="logOut()">LogOut</button>
+      <p><label id="status"> You are not yet connected </label><br /></p>
     </div>
   </header>
-  
-  <main>
-    
-  </main>
+
+  <main></main>
 </template>
 
 <script>
-
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'
-const SUPABASE_KEY = 'YOUR_ANON_KEY'
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
+const SUPABASE_URL = "https://ncnkjckpjvogzcxeahvm.supabase.co";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jbmtqY2twanZvZ3pjeGVhaHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjMzMjkxMzUsImV4cCI6MTk3ODkwNTEzNX0.QV1t05RVYpPDVoIbYbC2ChMXrSdHuSdfd81AEMeqF3E";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export default {
-  methods: {  
+  methods: {
     //this method allows a new user to sign up the system. Once done, the user receives an email
     //asking for account validation. Once the validation made the user is added to the system
-    async register(){
-      
+    async register() {
+      try {
+        const { user, session, error } = await supabase.auth.signUp({
+          email: this.email,
+          password: this.passwd,
+        });
+        if (error) throw error;
+        document.getElementById("status").innerHTML =
+          "Please validate the received email !";
+      } catch (error) {
+        alert(error.error_description || error.message);
+      }
     },
     //this method allows the already registred user to log in the system.
-    async login(){
-       
-    }
-  }  
-}
+    async login() {
+      try {
+        const { user, session, error } = await supabase.auth.signIn({
+          email: this.email,
+          password: this.passwd,
+        });
+        if (error) throw error;
+        document.getElementById("status").innerHTML = "You are now logged !";
+      } catch (error) {
+        alert(error.error_description || error.message);
+      }
+    },
+    async reset() {
+      // fonction reset mdp
+      const { data, error } = await supabase.auth.api.resetPasswordForEmail(
+        this.email
+      );
+    },
+    async logOut() {},
+  },
+  mounted() {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event == "PASSWORD_RECOVERY") {
+        const newPassword = prompt(
+          "What would you like your new password to be?"
+        );
+        const { data, error } = await supabase.auth.update({
+          password: newPassword,
+        });
+
+        if (data) alert("Password updated successfully!");
+        if (error) alert("There was an error updating your password.");
+      }
+    });
+  },
+};
 </script>
 
 <style>
-@import './assets/base.css';
+@import "./assets/base.css";
 
 header .hidden {
-    visibility: hidden;
-    overflow: hidden;
-    display: flex;
-    display:inline-block;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  display: inline-block;
+  place-items: flex-start;
+  flex-wrap: wrap;
 }
 
 #app {
@@ -111,7 +160,7 @@ a,
 
   header .wrapper {
     display: flex;
-    display:inline-block;
+    display: inline-block;
     place-items: flex-start;
     flex-wrap: wrap;
   }
