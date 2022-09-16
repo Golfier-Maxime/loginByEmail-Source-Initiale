@@ -28,7 +28,7 @@ import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/Supaba
       <button v-on:click="register()">Sign Up</button>
       <button v-on:click="login()">Sign In</button>
       <button v-on:click="reset()">Reset</button>
-      <button v-on:click="logOut()">LogOut</button>
+      <button v-on:click="logout()">LogOut</button>
       <p><label id="status"> You are not yet connected </label><br /></p>
     </div>
   </header>
@@ -78,7 +78,11 @@ export default {
         this.email
       );
     },
-    async logOut() {},
+    async logout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      document.getElementById("status").innerHTML = "You are now logged out !";
+    },
   },
   mounted() {
     supabase.auth.onAuthStateChange(async (event, session) => {
