@@ -2,9 +2,10 @@
 
 <template>
   <header>
+    <h1>Maxime GOLFIER - MMI 2 - B2</h1>
     <router-link to="/" class="">Go to Login By Email</router-link>
     <br />
-    <router-link to="/tierce">Go to Login By Google</router-link>
+    <router-link to="/tierce">Go to Login By Google / GitHub</router-link>
     <img
       alt="Logo"
       class="logo"
