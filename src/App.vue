@@ -6,7 +6,7 @@ import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/Supaba
 
 <template>
   <header>
-    <router-link to="/">Go to Home</router-link>
+    <router-link to="/">Go to Home TEST</router-link>
     <img
       alt="Logo"
       class="logo"
