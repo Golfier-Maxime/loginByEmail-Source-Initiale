@@ -2,24 +2,27 @@
 import SignIn from "../components/SignIn.vue";
 import { createClient } from "@supabase/supabase-js";
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session == null) {
+    document.getElementById("status").innerHTML = "You are not logged !!!";
+  } else {
+    //alert('session value: ' + JSON.stringify(session))
+    document.getElementById("status").innerHTML =
+      "You are logged with the email: " + session.user.email;
+  }
+});
 </script>
     
-    <template>
-  <div class="wrapper" id="signOut">
-    <div><SignIn msg="User, please sign in !" /></div>
-    <label>email: </label><br />
-    <input
-      type="email"
-      required
-      v-model="email"
-      placeholder="username@domain.tld"
-    /><br />
-    <label>password: </label><br />
-    <input type="password" required v-model="passwd" /><br />
-
-    <button v-on:click="reset()">Reset</button>
-    <button v-on:click="logout()">LogOut</button>
-    <p><label id="status"> You are not yet connected </label><br /></p>
+<template>
+  <div>
+    <h1>{{ msg }}</h1>
+    <p>Please login if you have an account or register :</p>
+    <button @click="login()">Sign In</button><br />
+    <button @click="logout()">Sign Out</button><br />
+    <label id="status">You are not yet logged ! </label>
   </div>
 </template>
     
@@ -50,11 +53,9 @@ export default {
     async login() {
       try {
         const { user, session, error } = await supabase.auth.signIn({
-          email: this.email,
-          password: this.passwd,
+          provider: "google",
         });
         if (error) throw error;
-        document.getElementById("status").innerHTML = "You are now logged !";
       } catch (error) {
         alert(error.error_description || error.message);
       }
@@ -66,9 +67,13 @@ export default {
       );
     },
     async logout() {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      document.getElementById("status").innerHTML = "You are now logged out !";
+      try {
+        const { user, session, error } = await supabase.auth.signOut();
+        if (error) throw error;
+        document.getElementById("status").innerHTML = "You are disconnected !";
+      } catch (error) {
+        alert(error.error_description || error.message);
+      }
     },
   },
   mounted() {
