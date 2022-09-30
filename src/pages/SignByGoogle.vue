@@ -2,16 +2,6 @@
 import SignIn from "../components/SignIn.vue";
 import { createClient } from "@supabase/supabase-js";
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
-
-supabase.auth.onAuthStateChange((event, session) => {
-  if (session == null) {
-    document.getElementById("status").innerHTML = "You are not logged !!!";
-  } else {
-    //alert('session value: ' + JSON.stringify(session))
-    document.getElementById("status").innerHTML =
-      "You are logged with the email: " + session.user.email;
-  }
-});
 </script>
     
 <template>
@@ -99,5 +89,14 @@ export default {
     });
   },
 };
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session == null) {
+    document.getElementById("status").innerHTML = "You are not logged !!!";
+  } else {
+    //alert('session value: ' + JSON.stringify(session))
+    document.getElementById("status").innerHTML =
+      "You are logged with the email: " + session.user.email;
+  }
+});
 </script>
     
