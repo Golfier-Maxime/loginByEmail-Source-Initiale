@@ -31,10 +31,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 const SUPABASE_URL = "https://ncnkjckpjvogzcxeahvm.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jbmtqY2twanZvZ3pjeGVhaHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjMzMjkxMzUsImV4cCI6MTk3ODkwNTEzNX0.QV1t05RVYpPDVoIbYbC2ChMXrSdHuSdfd81AEMeqF3E";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const { user, session, error } = await supabase.auth.signIn({
-  provider: "github",
-});
+
 export default {
   methods: {
     //this method allows a new user to sign up the system. Once done, the user receives an email
