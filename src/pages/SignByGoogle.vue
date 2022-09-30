@@ -3,8 +3,6 @@ import SignIn from "../components/SignIn.vue";
 import { createClient } from "@supabase/supabase-js";
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
 supabase.auth.onAuthStateChange((event, session) => {
   if (session == null) {
     document.getElementById("status").innerHTML = "You are not logged !!!";
@@ -27,10 +25,12 @@ supabase.auth.onAuthStateChange((event, session) => {
   </div>
 </template>
     
-    <script>
+<script>
 const SUPABASE_URL = "https://ncnkjckpjvogzcxeahvm.supabase.co";
 const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jbmtqY2twanZvZ3pjeGVhaHZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjMzMjkxMzUsImV4cCI6MTk3ODkwNTEzNX0.QV1t05RVYpPDVoIbYbC2ChMXrSdHuSdfd81AEMeqF3E";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export default {
   methods: {
